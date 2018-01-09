@@ -2,7 +2,7 @@
 A simple event bus powered by redis to communicate between multiple node instances.
 
 ## Install
-```
+```bash
 npm install --save node-redis-eventbus
 
 //or
