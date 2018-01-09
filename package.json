@@ -1,6 +1,6 @@
 {
 	"name": "node-redis-eventbus",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "A simple event bus powered by node-redis to communicate between multiple node instances",
 	"main": "build/EventBus.js",
 	"repository": "https://github.com/yss14/node-redis-eventbus.git",
@@ -12,6 +12,8 @@
 		"jest": "^22.0.4",
 		"ts-jest": "^22.0.1",
 		"ts-node": "^4.1.0",
+		"tslint": "^5.8.0",
+		"tslint-eslint-rules": "^4.1.1",
 		"typescript": "^2.6.2"
 	},
 	"dependencies": {
@@ -19,7 +21,8 @@
 	},
 	"scripts": {
 		"build": "tsc",
+		"lint": "node node_modules/tslint/bin/tslint --project tsconfig.json --config tslint.json",
 		"test": "jest --forceExit --config=jest.config.json",
-		"prepublish": "npm run build && npm run test"
+		"prepare": "npm run lint && npm run build && npm run test"
 	}
 }
