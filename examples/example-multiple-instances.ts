@@ -10,15 +10,15 @@ INSTANCE=2 ts-node examples/example-multiple-instances.ts
 in two seperate terminal/bash windows
 */
 
-let eventBus: EventBus;
-
-if (parseInt(process.env.INSTANCE) === 1) {
-	eventBus = EventBus.create('myEventBus', { prefix: 'instance1' });
-} else {
-	eventBus = EventBus.create('myEventBus', { prefix: 'instance2' });
-}
-
 (async () => {
+	let eventBus: EventBus;
+
+	if (parseInt(process.env.INSTANCE) === 1) {
+		eventBus = await EventBus.create('myEventBus', { prefix: 'instance1' });
+	} else {
+		eventBus = await EventBus.create('myEventBus', { prefix: 'instance2' });
+	}
+
 	const messageToSend = parseInt(process.env.INSTANCE) === 1 ? 'Instance1' : 'Instance2';
 
 	await eventBus.on<string>('msg', (payload) => {
