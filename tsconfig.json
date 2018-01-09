@@ -1,0 +1,26 @@
+{
+	"compilerOptions": {
+		"target": "es5",
+		"lib": [
+			"es5",
+			"es6"
+		],
+		"module": "commonjs",
+		"sourceMap": true,
+		"outDir": "build/",
+		"forceConsistentCasingInFileNames": true,
+		"noImplicitAny": true,
+		"strict": true,
+		"strictNullChecks": true,
+		"noImplicitReturns": true,
+		"allowSyntheticDefaultImports": false,
+		"declaration": true
+	},
+	"compileOnSave": true,
+	"files": [
+		"src/EventBus.ts"
+	],
+	"exclude": [
+		"node_modules"
+	]
+}

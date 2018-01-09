@@ -1,0 +1,23 @@
+{
+	"name": "node-redis-eventbus",
+	"version": "1.0.0",
+	"description": "A simple event bus powered by node-redis to communicate between multiple node instances",
+	"main": "build/EventBus.js",
+	"repository": "https://github.com/yss14/node-redis-eventbus.git",
+	"author": "Yss <yannickstach@googlemail.com>",
+	"license": "MIT",
+	"devDependencies": {
+		"@types/jest": "^22.0.1",
+		"@types/redis": "^2.8.4",
+		"jest": "^22.0.4",
+		"ts-jest": "^22.0.1",
+		"ts-node": "^4.1.0",
+		"typescript": "^2.6.2"
+	},
+	"dependencies": {
+		"redis": "^2.8.0"
+	},
+	"scripts": {
+		"test": "jest --forceExit --config=jest.config.json"
+	}
+}
