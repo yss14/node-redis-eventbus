@@ -1,4 +1,5 @@
 import { EventBus } from './EventBus';
+import { setTimeout } from 'timers';
 
 test('create new instance', async () => {
 	const eventBusInstance = EventBus.create('myEventBus_test1');
@@ -164,3 +165,57 @@ test('send multiple messages with two event on two buses', async () => {
 	eventBusInstanceA.destory();
 	eventBusInstanceB.destory();
 });
+
+test('send single message with one event prefixed', async () => {
+	const eventBusInstance = EventBus.create('myEventBus_test5', { prefix: 'myprefix' });
+
+	const MESSGAE_TO_SEND = 'Hello';
+	const EVENT = 'msg';
+
+	const result = await new Promise<string>(async (resolve, reject) => {
+		await eventBusInstance.on<string>(EVENT, (payload) => {
+			resolve(payload);
+		});
+
+		eventBusInstance.emit<string>(EVENT, MESSGAE_TO_SEND);
+	});
+
+	expect(result).toBe(MESSGAE_TO_SEND);
+
+	eventBusInstance.destory();
+});
+
+test('two independent prefixed instances with same event key', async () => {
+	const eventBusInstance1 = EventBus.create('myEventBus_test6_1', { prefix: 'instance1' });
+	const eventBusInstance2 = EventBus.create('myEventBus_test6_2', { prefix: 'instance2' });
+
+	const MESSGAE_TO_SEND1 = 'Hello';
+	const MESSGAE_TO_SEND2 = 'World';
+	const EVENT = 'msg';
+
+	let messageReceived1: string[] = [];
+	let messageReceived2: string[] = [];
+
+	await eventBusInstance1.on<string>(EVENT, (payload) => {
+		messageReceived1.push(payload);
+	});
+
+	await eventBusInstance2.on<string>(EVENT, (payload) => {
+		messageReceived2.push(payload);
+	});
+
+	eventBusInstance1.emit(EVENT, MESSGAE_TO_SEND1);
+	eventBusInstance2.emit(EVENT, MESSGAE_TO_SEND2);
+
+	//Wait 3 seconds
+	await new Promise((resolve) => setTimeout(resolve, 3000));
+
+	expect(messageReceived1.indexOf(MESSGAE_TO_SEND1) > -1).toBe(true);
+	expect(messageReceived1.indexOf(MESSGAE_TO_SEND2) > -1).toBe(false);
+
+	expect(messageReceived2.indexOf(MESSGAE_TO_SEND1) > -1).toBe(false);
+	expect(messageReceived2.indexOf(MESSGAE_TO_SEND2) > -1).toBe(true);
+
+	eventBusInstance1.destory();
+	eventBusInstance2.destory();
+}, 10000);
