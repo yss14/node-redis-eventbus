@@ -1,3 +1,6 @@
+[![NPM](https://nodei.co/npm/node-redis-eventbus.png)](https://npmjs.org/package/node-redis-eventbus)
+[<img src="https://yss14.visualstudio.com/_apis/public/build/definitions/c04cf627-33a9-4b7d-920b-a1d2c3867087/1/badge"/>](https://yss14.visualstudio.com/node-redis-eventbus/_build/index?definitionId=1)
+
 # node-redis-eventbus
 A simple event bus powered by redis to communicate between multiple node instances.
 
