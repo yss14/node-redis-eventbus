@@ -149,7 +149,7 @@ export class EventBus {
 	}
 
 	//Factory method
-	public async static create(name: string, clientOpts?: Redis.ClientOpts): Promise<EventBus> {
+	public static async create(name: string, clientOpts?: Redis.ClientOpts): Promise<EventBus> {
 		//Lazy init event bus instances map
 		if (EventBus._eventBusInstances === undefined || EventBus._eventBusInstances === null) {
 			EventBus._eventBusInstances = new Map<string, EventBus>();
