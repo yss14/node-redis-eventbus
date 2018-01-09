@@ -11,7 +11,7 @@
 		"forceConsistentCasingInFileNames": true,
 		"noImplicitAny": true,
 		"strict": true,
-		"strictNullChecks": true,
+		"strictNullChecks": false,
 		"noImplicitReturns": true,
 		"allowSyntheticDefaultImports": false,
 		"declaration": true

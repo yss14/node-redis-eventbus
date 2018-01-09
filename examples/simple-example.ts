@@ -1,4 +1,4 @@
-import { EventBus } from './src/EventBus';
+import { EventBus } from './../src/EventBus';
 import { setTimeout } from 'timers';
 
 const eventBus = EventBus.create('myEventBus');

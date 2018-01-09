@@ -8,10 +8,18 @@ export class EventBus {
 	private readonly _pub: Redis.RedisClient;
 	private readonly _sub: Redis.RedisClient;
 	private readonly _name: string;
+	private readonly _prefix: string;
 
 	private constructor(name: string, clientOpts?: Redis.ClientOpts) {
 		this._pub = Redis.createClient(clientOpts);
 		this._sub = Redis.createClient(clientOpts);
+
+		//Save prefix for filtering subscriptions on prefix later on
+		if (clientOpts && clientOpts.prefix) {
+			this._prefix = clientOpts.prefix;
+		} else {
+			this._prefix = '';
+		}
 	}
 
 	//Register event listener
@@ -19,26 +27,30 @@ export class EventBus {
 		return new Promise<void>((resolve, reject) => {
 			//Listen for the subscribe event
 			this._sub.on('subscribe', (channel: string, count: number) => {
-				if (channel === event) {
+				let _channel = this.removePrefixFromChannelName(channel);
+
+				if (_channel === event) {
 					resolve();
 				}
 			});
 
 			//Listen for the message event
 			this._sub.on('message', (channel: string, message: any) => {
-				if (event === channel) {
+				let _channel = this.removePrefixFromChannelName(channel);
+
+				if (event === _channel) {
 					callback(message as T);
 				}
 			});
 
 			//Subscribe on the event bus
-			this._sub.subscribe(event);
+			this._sub.subscribe(this.getPrefixedChannelName(event));
 		});
 	}
 
 	//Emit a new event to the event bus
 	public emit<T>(event: string, payload: T): void {
-		this._pub.publish(event, typeof payload === 'string' ? payload : JSON.stringify(payload));
+		this._pub.publish(this.getPrefixedChannelName(event), typeof payload === 'string' ? payload : JSON.stringify(payload));
 	}
 
 	//Destroy event bus instance
@@ -60,6 +72,19 @@ export class EventBus {
 		} else {
 			throw new Error('Event bus instance is undefined');
 		}
+	}
+
+	//Private util methods
+	private removePrefixFromChannelName(channel: string): string {
+		if (this._prefix.length > 0) {
+			return channel.substr(this._prefix.length + 1, channel.length - this._prefix.length);
+		} else {
+			return channel;
+		}
+	}
+
+	private getPrefixedChannelName(channel: string): string {
+		return `${this._prefix.length > 0 ? `${this._prefix}:` : ''}${channel}`;
 	}
 
 	//Factory method
