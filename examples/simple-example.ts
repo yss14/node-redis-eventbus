@@ -1,9 +1,9 @@
 import { EventBus } from './../src/EventBus';
 import { setTimeout } from 'timers';
 
-const eventBus = EventBus.create('myEventBus');
-
 (async () => {
+	const eventBus = await EventBus.create('myEventBus');
+
 	await eventBus.on<string>('msg', (payload) => {
 		console.log(`Received message: ${payload}`);
 

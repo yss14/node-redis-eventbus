@@ -1,14 +1,15 @@
+import { resolve } from 'path';
 import { EventBus } from './EventBus';
 import { setTimeout } from 'timers';
 
 test('create new instance', async () => {
-	const eventBusInstance = EventBus.create('myEventBus_test1');
+	const eventBusInstance = await EventBus.create('myEventBus_test1');
 
 	eventBusInstance.destory();
 });
 
 test('send single message with one event', async () => {
-	const eventBusInstance = EventBus.create('myEventBus_test2');
+	const eventBusInstance = await EventBus.create('myEventBus_test2');
 
 	const MESSGAE_TO_SEND = 'Hello';
 	const EVENT = 'msg';
@@ -27,7 +28,7 @@ test('send single message with one event', async () => {
 });
 
 test('send multiple messages with two event', async () => {
-	const eventBusInstance = EventBus.create('myEventBus_test3');
+	const eventBusInstance = await EventBus.create('myEventBus_test3');
 
 	const MESSGAE_TO_SEND1 = 'Hello';
 	const MESSGAE_TO_SEND2 = 'World';
@@ -80,8 +81,8 @@ test('send multiple messages with two event', async () => {
 });
 
 test('send multiple messages with two event on two buses', async () => {
-	const eventBusInstanceA = EventBus.create('myEventBus1_test4');
-	const eventBusInstanceB = EventBus.create('myEventBus2_test4');
+	const eventBusInstanceA = await EventBus.create('myEventBus1_test4');
+	const eventBusInstanceB = await EventBus.create('myEventBus2_test4');
 
 	const MESSGAE_TO_SEND1 = 'Hello';
 	const MESSGAE_TO_SEND2 = 'World';
@@ -167,7 +168,7 @@ test('send multiple messages with two event on two buses', async () => {
 });
 
 test('send single message with one event prefixed', async () => {
-	const eventBusInstance = EventBus.create('myEventBus_test5', { prefix: 'myprefix' });
+	const eventBusInstance = await EventBus.create('myEventBus_test5', { prefix: 'myprefix' });
 
 	const MESSGAE_TO_SEND = 'Hello';
 	const EVENT = 'msg';
@@ -186,8 +187,8 @@ test('send single message with one event prefixed', async () => {
 });
 
 test('two independent prefixed instances with same event key', async () => {
-	const eventBusInstance1 = EventBus.create('myEventBus_test6_1', { prefix: 'instance1' });
-	const eventBusInstance2 = EventBus.create('myEventBus_test6_2', { prefix: 'instance2' });
+	const eventBusInstance1 = await EventBus.create('myEventBus_test6_1', { prefix: 'instance1' });
+	const eventBusInstance2 = await EventBus.create('myEventBus_test6_2', { prefix: 'instance2' });
 
 	const MESSGAE_TO_SEND1 = 'Hello';
 	const MESSGAE_TO_SEND2 = 'World';
@@ -219,3 +220,59 @@ test('two independent prefixed instances with same event key', async () => {
 	eventBusInstance1.destory();
 	eventBusInstance2.destory();
 }, 10000);
+
+test('ping successful', async () => {
+	const eventBusInstance1 = await EventBus.create('myEventBus_test7_1', { prefix: 'instance1' });
+	const eventBusInstance2 = await EventBus.create('myEventBus_test7_2', { prefix: 'instance1' });
+
+	const result = await eventBusInstance1.ping();
+
+	expect(result).toBe(true);
+
+	eventBusInstance1.destory();
+	eventBusInstance2.destory();
+}, 10000);
+
+test('ping failed', async () => {
+	const eventBusInstance = await EventBus.create('myEventBus_test8_1', { prefix: 'instance1' });
+
+	const result = await eventBusInstance.ping();
+
+	expect(result).toBe(false);
+
+	eventBusInstance.destory();
+}, 10000);
+
+test('reserved ping event error', async () => {
+	const eventBusInstance = await EventBus.create('myEventBus_test9_1', { prefix: 'instance1' });
+
+	const wrapperFunctionEmit = async () => {
+		eventBusInstance.emit('ping', '');
+	};
+
+	const wrapperFunctionOn = async () => {
+		await eventBusInstance.on('ping', () => {
+			//Empty
+		});
+	};
+
+	wrapperFunctionEmit().catch(e => expect(e.message).toBe('Reserved event name ping cannot be emitted'));
+	wrapperFunctionOn().catch(e => expect(e.message).toBe('Reserved event name ping cannot be registered'));
+});
+
+test('reserved pong event error', async () => {
+	const eventBusInstance = await EventBus.create('myEventBus_test10_1', { prefix: 'instance1' });
+
+	const wrapperFunctionEmit = async () => {
+		eventBusInstance.emit('pong', '');
+	};
+
+	const wrapperFunctionOn = async () => {
+		await eventBusInstance.on('pong', () => {
+			//Empty
+		});
+	};
+
+	wrapperFunctionEmit().catch(e => expect(e.message).toBe('Reserved event name pong cannot be emitted'));
+	wrapperFunctionOn().catch(e => expect(e.message).toBe('Reserved event name pong cannot be registered'));
+});
