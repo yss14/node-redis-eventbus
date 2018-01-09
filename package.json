@@ -18,6 +18,8 @@
 		"redis": "^2.8.0"
 	},
 	"scripts": {
-		"test": "jest --forceExit --config=jest.config.json"
+		"build": "tsc",
+		"test": "jest --forceExit --config=jest.config.json",
+		"prepublish": "npm run build && npm run test"
 	}
 }
