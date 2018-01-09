@@ -256,10 +256,8 @@ test('reserved ping event error', async () => {
 		});
 	};
 
-	wrapperFunctionEmit().catch(e => expect(e).toMatch('error'));
-	wrapperFunctionOn().catch(e => expect(e).toMatch('error'));
-
-	eventBusInstance.destory();
+	wrapperFunctionEmit().catch(e => expect(e.message).toBe('Reserved event name ping cannot be emitted'));
+	wrapperFunctionOn().catch(e => expect(e.message).toBe('Reserved event name ping cannot be registered'));
 });
 
 test('reserved pong event error', async () => {
@@ -275,8 +273,6 @@ test('reserved pong event error', async () => {
 		});
 	};
 
-	wrapperFunctionEmit().catch(e => expect(e).toMatch('error'));
-	wrapperFunctionOn().catch(e => expect(e).toMatch('error'));
-
-	eventBusInstance.destory();
+	wrapperFunctionEmit().catch(e => expect(e.message).toBe('Reserved event name pong cannot be emitted'));
+	wrapperFunctionOn().catch(e => expect(e.message).toBe('Reserved event name pong cannot be registered'));
 });

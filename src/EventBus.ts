@@ -1,5 +1,4 @@
 import * as Redis from 'redis';
-import { resolve } from 'path';
 import { clearTimeout } from 'timers';
 
 export class EventBus {
@@ -75,7 +74,7 @@ export class EventBus {
 	private _emit<T>(event: string, payload: T, internalCall: boolean = true): void {
 		//Check if event is reserved event name
 		if (!internalCall && this.isReservedEventName(event)) {
-			throw new Error(`Reserved event name ${event} cannot be registered`);
+			throw new Error(`Reserved event name ${event} cannot be emitted`);
 		}
 
 		this._pub.publish(this.getPrefixedChannelName(event), typeof payload === 'string' ? payload : JSON.stringify(payload));
@@ -86,7 +85,7 @@ export class EventBus {
 		Waits for <timeout> seconds and returnes true, if at least <minResponseCount> clients responded
 	*/
 	public ping(timeout: number = 3000, minResponseCount: number = 1): Promise<boolean> {
-		return new Promise<boolean>((resolve) => {
+		return new Promise<boolean>(async (resolve) => {
 			let responseCount = 0;
 
 			const timeoutRef = setTimeout(() => {
@@ -94,7 +93,7 @@ export class EventBus {
 				resolve(responseCount >= minResponseCount + 1);
 			}, timeout);
 
-			this._on<void>('pong', () => {
+			await this._on<void>('pong', () => {
 				responseCount++;
 
 				//+1 because our instance itself will respond
