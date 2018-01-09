@@ -1,5 +1,4 @@
 import * as Redis from 'redis';
-import { RedisClient } from 'redis';
 
 export class EventBus {
 	//Static variables
@@ -48,6 +47,10 @@ export class EventBus {
 
 		this._sub.quit();
 		this._pub.quit();
+
+		if (EventBus._eventBusInstances.has(this._name)) {
+			EventBus._eventBusInstances.delete(this._name);
+		}
 	}
 
 	//Returns connection status of redis client
