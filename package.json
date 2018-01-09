@@ -22,7 +22,6 @@
 	"scripts": {
 		"build": "tsc",
 		"lint": "node node_modules/tslint/bin/tslint --project tsconfig.json --config tslint.json",
-		"test": "jest --forceExit --config=jest.config.json",
-		"prepublishOnly": "npm run lint && npm run build && npm run test"
+		"test": "jest --forceExit --config=jest.config.json"
 	}
 }
