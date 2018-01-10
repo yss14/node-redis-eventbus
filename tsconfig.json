@@ -18,7 +18,7 @@
 	},
 	"compileOnSave": true,
 	"files": [
-		"src/EventBus.ts"
+		"src/index.ts"
 	],
 	"exclude": [
 		"node_modules"

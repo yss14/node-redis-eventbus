@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import { EventBus } from './EventBus';
+import { EventBus } from './index';
 import { setTimeout } from 'timers';
 
 test('create new instance', async () => {
