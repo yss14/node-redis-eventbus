@@ -1,4 +1,4 @@
-import { EventBus } from './../src/EventBus';
+import { EventBus } from './../src/index';
 import { setTimeout } from 'timers';
 
 (async () => {
