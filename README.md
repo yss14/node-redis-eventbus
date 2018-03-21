@@ -82,7 +82,7 @@ ping(timeout?: number, minResponseCount?: number): Promise<boolean>;
 
 //Destroy this event bus instance and disconnect from redis
 //Watch out: If there are other clients connected, these instances will not be destroyed!
-destory(): void;
+destroy(): void;
 
 //Property which indicated wether the event bus is connected
 connected: boolean;
